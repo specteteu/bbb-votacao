@@ -72,6 +72,12 @@
       box-shadow: var(--glow);
       animation: pulse-badge 2s ease-in-out infinite;
     }
+    /* Badge turns grey when votação is encerrada */
+    .logo-badge.encerrada {
+      background: var(--muted);
+      box-shadow: none;
+      animation: none;
+    }
     @keyframes pulse-badge {
       0%,100% { box-shadow: 0 0 20px rgba(232,0,61,0.4); }
       50%      { box-shadow: 0 0 40px rgba(232,0,61,0.8); }
@@ -117,7 +123,8 @@
       align-items: center;
       gap: 10px;
     }
-    #status-banner.live { border-color: var(--accent); color: var(--text); }
+    #status-banner.live      { border-color: var(--accent); color: var(--text); }
+    #status-banner.encerrada { border-color: var(--muted); color: var(--muted); }
     #status-banner .dot {
       width: 10px; height: 10px;
       border-radius: 50%;
@@ -129,6 +136,27 @@
       animation: blink 1.2s ease-in-out infinite;
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* ── ENCERRADA BANNER ──────────────────────── */
+    /* Shown via JS when status === 'encerrada' */
+    #encerrada-banner {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--muted);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    #encerrada-banner .enc-icon { font-size: 36px; margin-bottom: 8px; }
+    #encerrada-banner h3 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 28px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    #encerrada-banner p { font-size: 14px; color: var(--muted); }
 
     /* ── NAME MODAL ────────────────────────────── */
     #name-screen {
@@ -206,15 +234,7 @@
       transform: translateY(-2px);
       box-shadow: 0 8px 30px rgba(232,0,61,0.6);
     }
-    .btn-primary:disabled {
-      opacity: 0.5; cursor: not-allowed;
-    }
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-    .btn-secondary:hover { background: var(--card); color: var(--text); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* ── SECTION TITLE ─────────────────────────── */
     .section-title {
@@ -264,7 +284,8 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 14px; font-weight: 700;
     }
-    .participant-card.voted-already {
+    /* Applied when user voted OR votação is encerrada */
+    .participant-card.locked {
       opacity: 0.6;
       cursor: not-allowed;
       pointer-events: none;
@@ -279,20 +300,14 @@
     }
     .participant-card:hover .participant-img { transform: scale(1.04); }
 
-    .participant-info {
-      padding: 16px;
-    }
+    .participant-info { padding: 16px; }
     .participant-name {
       font-family: 'Bebas Neue', cursive;
       font-size: 22px;
       letter-spacing: 1px;
       margin-bottom: 4px;
     }
-    .participant-tag {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-    }
+    .participant-tag { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
 
     /* ── VOTE BUTTON ───────────────────────────── */
     #vote-section {
@@ -300,13 +315,9 @@
       display: flex; flex-direction: column;
       align-items: center; gap: 12px;
     }
-    #vote-btn {
-      max-width: 400px;
-      font-size: 26px;
-      padding: 18px 40px;
-    }
+    #vote-btn { max-width: 400px; font-size: 26px; padding: 18px 40px; }
     #vote-message { font-size: 14px; color: var(--muted); text-align: center; }
-    #vote-message.error { color: #ff4444; }
+    #vote-message.error   { color: #ff4444; }
     #vote-message.success { color: #00cc66; }
 
     /* ── RESULTS ───────────────────────────────── */
@@ -357,9 +368,7 @@
       justify-content: space-between;
       margin-bottom: 10px;
     }
-    .result-name-wrap {
-      display: flex; align-items: center; gap: 10px;
-    }
+    .result-name-wrap { display: flex; align-items: center; gap: 10px; }
     .result-avatar {
       width: 38px; height: 38px;
       border-radius: 50%;
@@ -410,23 +419,6 @@
     }
     #refresh-countdown { color: var(--accent); font-weight: 700; }
 
-    /* ── ADMIN PANEL ───────────────────────────── */
-    #admin-panel {
-      background: var(--surface);
-      border: 1px solid rgba(255,107,0,0.3);
-      border-radius: 20px;
-      padding: 28px;
-      margin-bottom: 40px;
-    }
-    #admin-panel h3 {
-      font-family: 'Bebas Neue', cursive;
-      font-size: 24px;
-      color: var(--accent2);
-      margin-bottom: 8px;
-    }
-    #admin-panel p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-    #create-btn { max-width: 280px; }
-
     /* ── TOAST ─────────────────────────────────── */
     #toast {
       position: fixed;
@@ -443,7 +435,7 @@
       white-space: nowrap;
       max-width: 90vw;
     }
-    #toast.show { transform: translateX(-50%) translateY(0); }
+    #toast.show    { transform: translateX(-50%) translateY(0); }
     #toast.success { border-color: #00cc66; color: #00cc66; }
     #toast.error   { border-color: #ff4444; color: #ff4444; }
 
@@ -494,9 +486,9 @@
      HEADER
 ════════════════════════════════════════════ -->
 <header>
-  <div class="logo-badge">🔴 AO VIVO</div>
+  <div class="logo-badge" id="live-badge">🔴 AO VIVO</div>
   <h1>PAREDÃO</h1>
-  <p class="subtitle">Quem você quer eliminar? Vote agora!</p>
+  <p class="subtitle" id="header-subtitle">Quem você quer eliminar? Vote agora!</p>
 </header>
 
 <main>
@@ -507,13 +499,11 @@
     <span id="status-text">Conectando ao banco de dados...</span>
   </div>
 
-  <!-- ADMIN PANEL (only shown if no active vote) -->
-  <div id="admin-panel" style="display:none;">
-    <h3>⚙️ Painel Admin</h3>
-    <p>Nenhuma votação ativa encontrada. Crie uma para começar.</p>
-    <button class="btn btn-primary" id="create-btn" onclick="createVotacao()">
-      + CRIAR VOTAÇÃO
-    </button>
+  <!-- ENCERRADA BANNER — hidden by default, shown via JS -->
+  <div id="encerrada-banner">
+    <div class="enc-icon">🔒</div>
+    <h3>VOTAÇÃO ENCERRADA</h3>
+    <p>O prazo para votar neste paredão acabou. Confira os resultados finais abaixo!</p>
   </div>
 
   <!-- PARTICIPANTS -->
@@ -560,151 +550,194 @@
      JAVASCRIPT
 ════════════════════════════════════════════ -->
 <script>
-// ┌──────────────────────────────────────────┐
-// │  🔧 CONFIGURE AQUI — PASTE SUAS CHAVES  │
-// └──────────────────────────────────────────┘
-const SUPABASE_URL  = 'https://tpjuaqueizbraweukiou.supabase.co';       // ← Sua URL do Supabase
+
+// ╔══════════════════════════════════════════════╗
+// ║  🔧 CONFIGURE AQUI — PASTE SUAS CHAVES      ║
+// ╚══════════════════════════════════════════════╝
+const SUPABASE_URL      = 'https://tpjuaqueizbraweukiou.supabase.co';      // ← Sua URL do Supabase
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwanVhcXVlaXpicmF3ZXVraW91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0ODM5MzIsImV4cCI6MjA5MDA1OTkzMn0.w3InvZRe1g1K2TebpY5p4bHI2xztVIZ58Qzw2jWpBRM'; // ← Sua chave anônima
 
-// ┌──────────────────────────────────────────┐
-// │  👥 PARTICIPANTES — edite à vontade!    │
-// └──────────────────────────────────────────┘
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  📋 SQL PARA CRIAR AS TABELAS — execute no Supabase         ║
+// ║                                                              ║
+// ║  -- Tabela principal de votações                             ║
+// ║  CREATE TABLE votacoes (                                     ║
+// ║    id            bigserial PRIMARY KEY,                      ║
+// ║    tipo          text,                                       ║
+// ║    status        text,                                       ║
+// ║    participantes jsonb,                                      ║
+// ║    votos         jsonb                                       ║
+// ║  );                                                          ║
+// ║                                                              ║
+// ║  -- Tabela de controle de votos individuais                  ║
+// ║  -- É o que impede voto duplo de verdade (não só localStorage)║
+// ║  CREATE TABLE votos_individuais (                            ║
+// ║    id           bigserial PRIMARY KEY,                       ║
+// ║    votacao_id   bigint,                                      ║
+// ║    nome_votante text,                                        ║
+// ║    voto         text,                                        ║
+// ║    created_at   timestamptz DEFAULT now()                    ║
+// ║  );                                                          ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+// ╔══════════════════════════════════════════════╗
+// ║  👥 PARTICIPANTES — mesmos do original       ║
+// ╚══════════════════════════════════════════════╝
 const PARTICIPANTES = [
   {
-    nome: 'Ingrid',
+    nome:  'Ingrid',
     label: 'Amiga de todos, ajuda todos! Treta quase todos os dias com a Cecília Nega',
-    foto: 'https://i.pravatar.cc/300?img=3'
+    foto:  'https://drive.google.com/file/d/1FyMHj8QW8-vmYl3-vP55iTOlNcIkbnjp/view?usp=drive_link'
   },
   {
-    nome: 'Cecilia N#2',
+    nome:  'Cecilia N#2',
     label: 'Sincera, fala na cara e não tem medo do embate que pode causar',
-    foto: 'https://i.pravatar.cc/300?img=47'
+    foto:  'https://drive.google.com/file/d/1odKspm_F7wuMaQI9bjd0LvIxmRKenhd8/view?usp=drive_link'
   },
   {
-    nome: 'Camila',
+    nome:  'Camila',
     label: 'Topa tudo sem pensar muito, segue a frase "viver como se fosse o último dia"',
-    foto: 'https://i.pravatar.cc/300?img=12'
+    foto:  'https://drive.google.com/file/d/1_jqqZ0U_uFc1NzJCnQTAzgy3oJY21lnG/view?usp=drive_link'
   },
   {
-    nome: 'Evelyn',
+    nome:  'Evelyn',
     label: 'Calma, pensa antes de falar, se engana quem acha que sua bondade é ingenuidade',
-    foto: 'https://i.pravatar.cc/300?img=25'
+    foto:  'https://drive.google.com/file/d/17iZ6x5EFALny-xz0QpHx2JFhdwufw-sc/view?usp=drive_link'
   },
   {
-    nome: 'Ytewa',
+    nome:  'Ytewa',
     label: 'Próprio meme, sempre tem um meme na ponta da língua. Toma as decisões sem pensar(as vezes)',
-    foto: 'https://i.pravatar.cc/300?img=25'
+    foto:  'https://drive.google.com/file/d/1jxLGhR03-TBLj_7APWu9aF2H1g3tKrVI/view?usp=drive_link'
   },
   {
-    nome: 'Cecilia N#1',
+    nome:  'Cecilia N#1',
     label: 'Ame ou odeie, ela é 8 ou 80 e ao mesmo tempo que pode sentir muito, também pode causar',
-    foto: 'https://i.pravatar.cc/300?img=25'
+    foto:  'https://drive.google.com/file/d/155-FS9iTBaKQ9MkwZ3-qBnvxjEQo6at3/view?usp=drive_link'
   }
 ];
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  SETUP SUPABASE
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  GLOBAL STATE
-// ════════════════════════════════════════════
-let voterName      = '';         // Name entered by user
-let selectedName   = null;       // Participant chosen to vote out
-let votacaoId      = null;       // Supabase row ID of active votação
-let votacaoAtiva   = null;       // Full row object
-let hasVoted       = false;      // Whether user already voted this session
-let refreshTimer   = null;       // Setinterval for auto-refresh
-let countdown      = 10;         // Seconds until next refresh
-const REFRESH_SECS = 10;        // How often to refresh (seconds)
+// ════════════════════════════════════════════════
+let voterName    = '';     // Name entered by user in the modal
+let selectedName = null;   // Participant the user clicked on
+let votacaoId    = null;   // ID of the currently loaded votação row
+let votacaoAtiva = null;   // Full votação row object from Supabase
+let hasVoted     = false;  // True after user successfully votes this session
+let isEncerrada  = false;  // True when votação status === 'encerrada'
+let refreshTimer = null;   // setInterval handle for auto-refresh countdown
+let countdown    = 10;     // Seconds shown in the countdown UI
 
-// ════════════════════════════════════════════
+const REFRESH_SECS = 10;  // How often to auto-refresh results (in seconds)
+
+// ════════════════════════════════════════════════
 //  NAME MODAL
-// ════════════════════════════════════════════
+//  User enters their name before entering the vote.
+// ════════════════════════════════════════════════
 function confirmName() {
   const input = document.getElementById('voter-name-input');
-  const name = input.value.trim();
+  const name  = input.value.trim();
+
   if (!name) {
     showToast('Digite seu nome primeiro!', 'error');
     input.focus();
     return;
   }
+
   voterName = name;
+  // Save so returning visitors skip the modal automatically
   localStorage.setItem('paredao_voter_name', name);
   document.getElementById('name-screen').classList.add('hidden');
   init();
 }
 
-// Allow pressing Enter in name input
+// Allow pressing Enter in the name input field
 document.getElementById('voter-name-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') confirmName();
 });
 
-// ════════════════════════════════════════════
-//  INIT — Called after name is confirmed
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  INIT — Runs once after the name is confirmed
+// ════════════════════════════════════════════════
 async function init() {
-  renderParticipants();
-  await loadVotacao();
-  startRefreshCountdown();
+  renderParticipants();   // Draw the participant cards
+  await loadVotacao();    // Fetch active/latest votação from Supabase
+  startRefreshCountdown(); // Begin auto-refresh timer
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  RENDER PARTICIPANT CARDS
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function renderParticipants() {
   const grid = document.getElementById('participants-grid');
   grid.innerHTML = '';
 
   PARTICIPANTES.forEach(p => {
-    const card = document.createElement('div');
+    const card     = document.createElement('div');
     card.className = 'participant-card';
-    card.id = 'card-' + p.nome;
-    card.onclick = () => selectParticipant(p.nome);
+    // Store nome in a data attribute for safe retrieval (avoids ID special-char issues)
+    card.dataset.nome = p.nome;
+    card.onclick      = () => selectParticipant(p.nome);
 
     card.innerHTML = `
-      <img class="participant-img" src="${p.foto}" alt="${p.nome}"
+      <img class="participant-img"
+           src="${p.foto}"
+           alt="${escapeHtml(p.nome)}"
            onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.nome)}&size=300&background=1c1c2e&color=f0f0f8'" />
       <div class="participant-info">
-        <div class="participant-name">${p.nome}</div>
-        <div class="participant-tag">${p.label}</div>
+        <div class="participant-name">${escapeHtml(p.nome)}</div>
+        <div class="participant-tag">${escapeHtml(p.label)}</div>
       </div>
     `;
     grid.appendChild(card);
   });
 }
 
-// ════════════════════════════════════════════
-//  SELECT PARTICIPANT
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  SELECT PARTICIPANT (card click)
+// ════════════════════════════════════════════════
 function selectParticipant(nome) {
-  if (hasVoted) return;
+  // Ignore clicks if user already voted or votação is closed
+  if (hasVoted || isEncerrada) return;
 
-  // Remove previous selection
+  // Remove highlight from previously selected card
   document.querySelectorAll('.participant-card').forEach(c => c.classList.remove('selected'));
 
   selectedName = nome;
-  document.getElementById('card-' + nome).classList.add('selected');
 
-  const btn = document.getElementById('vote-btn');
-  btn.disabled = false;
+  // Highlight the clicked card
+  const card = document.querySelector(`.participant-card[data-nome="${CSS.escape(nome)}"]`);
+  if (card) card.classList.add('selected');
 
-  document.getElementById('vote-message').textContent =
-    `Você vai votar para eliminar ${nome}`;
-  document.getElementById('vote-message').className = '';
+  document.getElementById('vote-btn').disabled = false;
+
+  const msg = document.getElementById('vote-message');
+  msg.textContent = `Você vai votar para eliminar ${nome}`;
+  msg.className   = '';
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  LOAD VOTAÇÃO FROM SUPABASE
-// ════════════════════════════════════════════
+//
+//  Priority:
+//    1. Latest row with status = 'ativa'   → allow voting
+//    2. Latest row with status = 'encerrada' → show results, lock voting
+//    3. Nothing found                       → show waiting message
+//
+//  Old votações are NEVER overwritten or deleted.
+// ════════════════════════════════════════════════
 async function loadVotacao() {
-  setStatus('Buscando votação ativa...', false);
+  setStatus('Buscando votação...', false);
 
   try {
-    // Fetch the most recent active votação
-    const { data, error } = await db
+    // ── Try active votação first ──
+    let { data, error } = await db
       .from('votacoes')
       .select('*')
       .eq('status', 'ativa')
@@ -713,82 +746,123 @@ async function loadVotacao() {
 
     if (error) throw error;
 
+    // ── If none active, fall back to latest encerrada to show results ──
     if (!data || data.length === 0) {
-      // No active votação found — show admin panel
-      setStatus('Nenhuma votação ativa. Crie uma abaixo.', false);
-      document.getElementById('admin-panel').style.display = 'block';
+      const res = await db
+        .from('votacoes')
+        .select('*')
+        .eq('status', 'encerrada')
+        .order('id', { ascending: false })
+        .limit(1);
+
+      if (res.error) throw res.error;
+      data = res.data;
+    }
+
+    // ── Nothing at all found ──
+    if (!data || data.length === 0) {
+      setStatus('Nenhuma votação encontrada. Aguarde!', false);
+      disableVoting('Nenhuma votação ativa no momento.');
       return;
     }
 
-    // We have an active votação!
+    // ── Store the loaded row globally ──
     votacaoAtiva = data[0];
     votacaoId    = data[0].id;
+    isEncerrada  = (data[0].status === 'encerrada');
 
-    document.getElementById('admin-panel').style.display = 'none';
-    setStatus('Votação ativa — vote agora!', true);
+    if (isEncerrada) {
+      // Votação is CLOSED — show results but block voting
+      applyEncerradaUI();
+    } else {
+      // Votação is ACTIVE — allow voting
+      setStatus('Votação ativa — vote agora!', true);
 
-    // Check if this voter already voted (uses localStorage key with votacaoId)
-    const localKey = `paredao_voted_${votacaoId}`;
-    if (localStorage.getItem(localKey)) {
-      hasVoted = true;
-      setVotedState();
+      // localStorage check: fast UX for returning voters (not the security gate)
+      if (localStorage.getItem(`paredao_voted_${votacaoId}`)) {
+        hasVoted = true;
+        setVotedState();
+      }
     }
 
+    // Always render the current vote totals (safe even if votos is null)
     renderResults(votacaoAtiva.votos || {});
 
   } catch (err) {
-    console.error(err);
+    console.error('[loadVotacao]', err);
     setStatus('Erro ao conectar: ' + err.message, false);
     showToast('Erro ao carregar votação!', 'error');
   }
 }
 
-// ════════════════════════════════════════════
-//  CREATE VOTAÇÃO (Admin)
-// ════════════════════════════════════════════
-async function createVotacao() {
-  const btn = document.getElementById('create-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Criando...';
+// ════════════════════════════════════════════════
+//  APPLY ENCERRADA UI
+//  Updates every visible element to reflect closed state.
+// ════════════════════════════════════════════════
+function applyEncerradaUI() {
+  isEncerrada = true;
 
-  // Build initial votos object with 0 for each participant
-  const votosInicial = {};
-  const nomesParticipantes = PARTICIPANTES.map(p => p.nome);
-  nomesParticipantes.forEach(n => votosInicial[n] = 0);
+  // Header badge
+  const badge     = document.getElementById('live-badge');
+  badge.textContent = '🔒 ENCERRADO';
+  badge.classList.add('encerrada');
 
-  try {
-    const { data, error } = await db
-      .from('votacoes')
-      .insert([{
-        tipo: 'paredao',
-        status: 'ativa',
-        participantes: nomesParticipantes,
-        votos: votosInicial
-      }])
-      .select();
+  // Subtitle
+  document.getElementById('header-subtitle').textContent =
+    'Esta votação foi encerrada. Confira os resultados finais!';
 
-    if (error) throw error;
+  // Encerrada info banner
+  document.getElementById('encerrada-banner').style.display = 'block';
 
-    votacaoAtiva = data[0];
-    votacaoId    = data[0].id;
+  // Status bar
+  setStatus('Votação encerrada — resultados finais abaixo.', false, true);
 
-    document.getElementById('admin-panel').style.display = 'none';
-    setStatus('Votação criada e ativa!', true);
-    renderResults(votosInicial);
-    showToast('Votação criada com sucesso! ✅', 'success');
-
-  } catch (err) {
-    console.error(err);
-    showToast('Erro ao criar votação: ' + err.message, 'error');
-    btn.disabled = false;
-    btn.innerHTML = '+ CRIAR VOTAÇÃO';
-  }
+  // Lock vote button and all cards
+  disableVoting('⛔ Votação encerrada — não é mais possível votar.');
+  lockAllCards();
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  DISABLE VOTING — hides button functionality
+// ════════════════════════════════════════════════
+function disableVoting(message) {
+  const btn       = document.getElementById('vote-btn');
+  btn.disabled    = true;
+  btn.textContent = isEncerrada ? 'VOTAÇÃO ENCERRADA' : 'AGUARDANDO...';
+
+  const msg       = document.getElementById('vote-message');
+  msg.textContent = message || '';
+  msg.className   = '';
+}
+
+// ════════════════════════════════════════════════
+//  LOCK ALL PARTICIPANT CARDS
+// ════════════════════════════════════════════════
+function lockAllCards() {
+  document.querySelectorAll('.participant-card').forEach(c => {
+    c.classList.add('locked');
+  });
+}
+
+// ════════════════════════════════════════════════
 //  SUBMIT VOTE
-// ════════════════════════════════════════════
+//
+//  Security flow (two layers):
+//    Layer 1 — Supabase DB (votos_individuais): TRUE security gate.
+//              Checks if nome_votante already has a row for this votacao_id.
+//              This works even if localStorage is cleared.
+//    Layer 2 — localStorage: UX only.
+//              Lets us skip the DB check on next page load for speed.
+//
+//  Vote sequence:
+//    1. Check votos_individuais → block if already voted
+//    2. Fetch freshest votos aggregate → avoids race conditions
+//    3. Insert row into votos_individuais (individual record)
+//    4. Update votos aggregate in votacoes table
+//    5. Save to localStorage for UX
+// ════════════════════════════════════════════════
 async function submitVote() {
+  // ── Pre-flight sanity checks ──
   if (!selectedName) {
     showToast('Selecione um participante!', 'error');
     return;
@@ -801,13 +875,40 @@ async function submitVote() {
     showToast('Você já votou nesta rodada!', 'error');
     return;
   }
+  if (isEncerrada) {
+    showToast('Esta votação já foi encerrada!', 'error');
+    return;
+  }
 
-  const btn = document.getElementById('vote-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> ENVIANDO...';
+  const btn     = document.getElementById('vote-btn');
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spinner"></span> VERIFICANDO...';
 
   try {
-    // Get the freshest votos from DB to avoid race conditions
+    // ── STEP 1: DB check — has this name already voted? ──
+    // This is the REAL duplicate prevention (not localStorage)
+    const { data: existing, error: checkErr } = await db
+      .from('votos_individuais')
+      .select('id')
+      .eq('votacao_id',   votacaoId)
+      .eq('nome_votante', voterName)
+      .limit(1);
+
+    if (checkErr) throw checkErr;
+
+    if (existing && existing.length > 0) {
+      // Found a record → this person already voted
+      hasVoted = true;
+      localStorage.setItem(`paredao_voted_${votacaoId}`, voterName);
+      setVotedState();
+      showToast('Você já votou nesta rodada!', 'error');
+      return;
+    }
+
+    // ── STEP 2: Fetch freshest vote totals before writing ──
+    // Prevents duplicate increments if two people vote at the same time
+    btn.innerHTML = '<span class="spinner"></span> ENVIANDO...';
+
     const { data: fresh, error: fetchErr } = await db
       .from('votacoes')
       .select('votos')
@@ -816,11 +917,22 @@ async function submitVote() {
 
     if (fetchErr) throw fetchErr;
 
-    // Increment vote count for selected participant
+    // Safely build updated totals (handles null votos)
     const votosAtualizados = fresh.votos || {};
     votosAtualizados[selectedName] = (votosAtualizados[selectedName] || 0) + 1;
 
-    // Save back to Supabase
+    // ── STEP 3: Insert individual vote row ──
+    const { error: insertErr } = await db
+      .from('votos_individuais')
+      .insert([{
+        votacao_id:   votacaoId,
+        nome_votante: voterName,
+        voto:         selectedName
+      }]);
+
+    if (insertErr) throw insertErr;
+
+    // ── STEP 4: Update aggregate vote totals ──
     const { error: updateErr } = await db
       .from('votacoes')
       .update({ votos: votosAtualizados })
@@ -828,41 +940,36 @@ async function submitVote() {
 
     if (updateErr) throw updateErr;
 
-    // Mark as voted in localStorage so they can't vote again
-    const localKey = `paredao_voted_${votacaoId}`;
-    localStorage.setItem(localKey, selectedName);
-
-    hasVoted = true;
+    // ── STEP 5: Update local state ──
+    localStorage.setItem(`paredao_voted_${votacaoId}`, selectedName);
+    hasVoted           = true;
     votacaoAtiva.votos = votosAtualizados;
 
     renderResults(votosAtualizados);
     setVotedState();
     showToast(`Voto em ${selectedName} registrado! 🎉`, 'success');
 
-    const msg = document.getElementById('vote-message');
+    const msg     = document.getElementById('vote-message');
     msg.textContent = `✅ Voto registrado para ${selectedName}!`;
-    msg.className = 'success';
+    msg.className   = 'success';
 
   } catch (err) {
-    console.error(err);
+    console.error('[submitVote]', err);
     showToast('Erro ao registrar voto: ' + err.message, 'error');
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = 'VOTAR AGORA';
   }
 }
 
-// ════════════════════════════════════════════
-//  SET VOTED STATE (lock UI)
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  SET VOTED STATE — Lock the UI after a vote
+// ════════════════════════════════════════════════
 function setVotedState() {
-  const btn = document.getElementById('vote-btn');
-  btn.disabled = true;
+  const btn       = document.getElementById('vote-btn');
+  btn.disabled    = true;
   btn.textContent = 'JÁ VOTOU ✓';
 
-  // Dim all cards
-  document.querySelectorAll('.participant-card').forEach(c => {
-    c.classList.add('voted-already');
-  });
+  lockAllCards();
 
   const msg = document.getElementById('vote-message');
   if (!msg.classList.contains('success')) {
@@ -870,14 +977,18 @@ function setVotedState() {
   }
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  RENDER RESULTS
-// ════════════════════════════════════════════
+//  Safe even when votos is null, undefined, or empty.
+// ════════════════════════════════════════════════
 function renderResults(votos) {
   const list = document.getElementById('results-list');
 
-  // Total votes
-  const total = Object.values(votos).reduce((sum, v) => sum + v, 0);
+  // Safety: always work with a plain object
+  if (!votos || typeof votos !== 'object') votos = {};
+
+  // Sum all votes (coerce to number in case Supabase returns strings)
+  const total = Object.values(votos).reduce((sum, v) => sum + (Number(v) || 0), 0);
   document.getElementById('total-count').textContent = total;
 
   if (total === 0) {
@@ -885,15 +996,16 @@ function renderResults(votos) {
     return;
   }
 
-  // Sort by most votes (leader first)
-  const sorted = Object.entries(votos).sort((a, b) => b[1] - a[1]);
+  // Sort highest → lowest so leader is always at top
+  const sorted     = Object.entries(votos).sort((a, b) => b[1] - a[1]);
   const leaderName = sorted[0][0];
 
-  list.innerHTML = sorted.map(([nome, count], index) => {
-    const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-    const isLeader = nome === leaderName && count > 0;
+  list.innerHTML = sorted.map(([nome, count]) => {
+    const numCount    = Number(count) || 0;
+    const pct         = total > 0 ? Math.round((numCount / total) * 100) : 0;
+    const isLeader    = nome === leaderName && numCount > 0;
     const participant = PARTICIPANTES.find(p => p.nome === nome);
-    const foto = participant
+    const foto        = participant
       ? participant.foto
       : `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&size=80&background=1c1c2e&color=f0f0f8`;
 
@@ -901,33 +1013,35 @@ function renderResults(votos) {
       <div class="result-item ${isLeader ? 'leader' : ''}">
         <div class="result-top">
           <div class="result-name-wrap">
-            <img class="result-avatar" src="${foto}" alt="${nome}"
+            <img class="result-avatar" src="${foto}" alt="${escapeHtml(nome)}"
                  onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&size=80&background=1c1c2e&color=f0f0f8'"/>
-            <div class="result-name">${nome}</div>
+            <div class="result-name">${escapeHtml(nome)}</div>
             ${isLeader ? '<span class="crown">👑</span>' : ''}
           </div>
           <div class="result-pct">${pct}%</div>
         </div>
         <div class="bar-track">
-          <div class="bar-fill" style="width: ${pct}%"></div>
+          <div class="bar-fill" style="width:${pct}%"></div>
         </div>
-        <div class="result-votes-count">${count} voto${count !== 1 ? 's' : ''}</div>
+        <div class="result-votes-count">${numCount} voto${numCount !== 1 ? 's' : ''}</div>
       </div>
     `;
   }).join('');
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  AUTO-REFRESH COUNTDOWN
-// ════════════════════════════════════════════
+//  Every REFRESH_SECS seconds: pull fresh data from Supabase.
+//  Also detects if status changed to 'encerrada' in real-time.
+// ════════════════════════════════════════════════
 function startRefreshCountdown() {
   countdown = REFRESH_SECS;
-
   if (refreshTimer) clearInterval(refreshTimer);
 
   refreshTimer = setInterval(async () => {
     countdown--;
-    document.getElementById('refresh-countdown').textContent = countdown;
+    const el = document.getElementById('refresh-countdown');
+    if (el) el.textContent = countdown;
 
     if (countdown <= 0) {
       countdown = REFRESH_SECS;
@@ -940,43 +1054,207 @@ async function refreshResults() {
   if (!votacaoId) return;
 
   try {
+    // Fetch both votos and status so we can detect encerrada in real-time
     const { data, error } = await db
       .from('votacoes')
-      .select('votos')
+      .select('votos, status')
       .eq('id', votacaoId)
       .single();
 
     if (error) throw error;
-    if (data) renderResults(data.votos || {});
+    if (!data)  return;
+
+    // Detect if the votação was just closed (status changed while page was open)
+    if (data.status === 'encerrada' && !isEncerrada) {
+      isEncerrada          = true;
+      votacaoAtiva.status  = 'encerrada';
+      applyEncerradaUI();
+    }
+
+    renderResults(data.votos || {});
 
   } catch (err) {
-    console.error('Refresh error:', err);
+    console.error('[refreshResults]', err);
   }
 }
 
-// ════════════════════════════════════════════
-//  STATUS BANNER
-// ════════════════════════════════════════════
-function setStatus(msg, live) {
-  const banner = document.getElementById('status-banner');
-  const text   = document.getElementById('status-text');
+// ════════════════════════════════════════════════
+//  STATUS BANNER HELPER
+// ════════════════════════════════════════════════
+function setStatus(msg, live, closed = false) {
+  const banner     = document.getElementById('status-banner');
+  const text       = document.getElementById('status-text');
   text.textContent = msg;
-  banner.className = live ? 'live' : '';
+
+  if (live)        banner.className = 'live';
+  else if (closed) banner.className = 'encerrada';
+  else             banner.className = '';
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  TOAST NOTIFICATION
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function showToast(msg, type = '') {
-  const toast = document.getElementById('toast');
+  const toast     = document.getElementById('toast');
   toast.textContent = msg;
-  toast.className = 'show ' + type;
-  setTimeout(() => { toast.className = ''; }, 3000);
+  toast.className   = 'show ' + type;
+  setTimeout(() => { toast.className = ''; }, 3200);
 }
 
-// ════════════════════════════════════════════
-//  BOOT — Check for returning voter name
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  UTILITY HELPERS
+// ════════════════════════════════════════════════
+
+// Prevent XSS when inserting user-provided names into innerHTML
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║                                                                  ║
+// ║  🛠️  FUNÇÕES DE CONTROLE (SOMENTE CONSOLE — sem UI)             ║
+// ║  ──────────────────────────────────────────────────────────────  ║
+// ║  Essas funções NÃO aparecem na tela. Para usá-las:              ║
+// ║    1. Abra o console do navegador (F12 → aba "Console")         ║
+// ║    2. Digite o nome da função e pressione Enter                  ║
+// ║                                                                  ║
+// ║  Funções disponíveis:                                            ║
+// ║    createVotacao()    → cria uma nova votação ativa              ║
+// ║    encerrarVotacao()  → encerra a votação atual (ID carregado)   ║
+// ║    verVotos()         → lista todos os votos individuais         ║
+// ║                                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+// ── createVotacao ─────────────────────────────────────────────────
+// Creates a fresh votação row in Supabase with all participants at 0.
+// Previous votações are NEVER touched — history is preserved.
+// Usage: createVotacao()   (in browser console)
+window.createVotacao = async function () {
+  console.log('🗳️  Criando nova votação...');
+
+  // Build initial { "Nome": 0 } object for all participants
+  const votosInicial       = {};
+  const nomesParticipantes = PARTICIPANTES.map(p => p.nome);
+  nomesParticipantes.forEach(nome => { votosInicial[nome] = 0; });
+
+  try {
+    const { data, error } = await db
+      .from('votacoes')
+      .insert([{
+        tipo:          'paredao',
+        status:        'ativa',
+        participantes: nomesParticipantes,
+        votos:         votosInicial
+      }])
+      .select();
+
+    if (error) throw error;
+
+    console.log('✅ Votação criada! ID:', data[0].id);
+    console.log('   Recarregue a página para ativá-la nos usuários.');
+    console.log(data[0]);
+    return data[0];
+
+  } catch (err) {
+    console.error('❌ Erro ao criar votação:', err.message);
+  }
+};
+
+// ── encerrarVotacao ───────────────────────────────────────────────
+// Sets the currently loaded votação status to 'encerrada'.
+// Voting is blocked immediately in the UI (no page reload needed).
+// Usage: encerrarVotacao()   (in browser console)
+window.encerrarVotacao = async function () {
+  if (!votacaoId) {
+    console.warn('⚠️  Nenhuma votação carregada. Recarregue a página e tente novamente.');
+    return;
+  }
+
+  console.log(`🔒 Encerrando votação ID ${votacaoId}...`);
+
+  try {
+    const { error } = await db
+      .from('votacoes')
+      .update({ status: 'encerrada' })
+      .eq('id', votacaoId);
+
+    if (error) throw error;
+
+    console.log(`✅ Votação ${votacaoId} encerrada com sucesso!`);
+    console.log('   A interface foi atualizada imediatamente.');
+
+    // Apply UI change right now without waiting for auto-refresh
+    isEncerrada          = true;
+    votacaoAtiva.status  = 'encerrada';
+    applyEncerradaUI();
+    renderResults(votacaoAtiva.votos || {});
+
+  } catch (err) {
+    console.error('❌ Erro ao encerrar votação:', err.message);
+  }
+};
+
+// ── verVotos ──────────────────────────────────────────────────────
+// Fetches and console.logs every individual vote for the current votação.
+// Great for auditing who voted for whom.
+// Usage: verVotos()   (in browser console)
+window.verVotos = async function () {
+  if (!votacaoId) {
+    console.warn('⚠️  Nenhuma votação carregada. Recarregue a página e tente novamente.');
+    return;
+  }
+
+  console.log(`📋 Buscando votos individuais — votação ID ${votacaoId}...`);
+
+  try {
+    const { data, error } = await db
+      .from('votos_individuais')
+      .select('*')
+      .eq('votacao_id', votacaoId)
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      console.log('ℹ️  Nenhum voto registrado ainda nesta votação.');
+      return;
+    }
+
+    console.log(`📊 Total de votos: ${data.length}`);
+    console.log('─────────────────────────────────────────────────────');
+
+    data.forEach((v, i) => {
+      const time = new Date(v.created_at).toLocaleString('pt-BR');
+      const idx  = String(i + 1).padStart(3, '0');
+      console.log(`${idx}. ${(v.nome_votante || '?').padEnd(22)} → ${v.voto}   [${time}]`);
+    });
+
+    // Summary count per candidate
+    const resumo = {};
+    data.forEach(v => {
+      resumo[v.voto] = (resumo[v.voto] || 0) + 1;
+    });
+
+    console.log('─────────────────────────────────────────────────────');
+    console.log('📈 Resumo por participante:', resumo);
+
+    return data;
+
+  } catch (err) {
+    console.error('❌ Erro ao buscar votos:', err.message);
+  }
+};
+
+// ════════════════════════════════════════════════
+//  BOOT — Runs immediately on page load
+//  If a name is saved in localStorage → skip modal,
+//  go straight to init(). Otherwise the modal stays open.
+// ════════════════════════════════════════════════
 (function boot() {
   const savedName = localStorage.getItem('paredao_voter_name');
   if (savedName) {
@@ -984,9 +1262,9 @@ function showToast(msg, type = '') {
     document.getElementById('name-screen').classList.add('hidden');
     init();
   }
-  // Otherwise modal stays open — user must enter name
+  // Otherwise: name modal is shown and user must enter their name
 })();
-</script>
 
+</script>
 </body>
 </html>
